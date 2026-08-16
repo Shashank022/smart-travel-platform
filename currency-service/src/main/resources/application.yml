@@ -1,0 +1,13 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: currency-service
+clients:
+  frankfurter:
+    base-url: https://api.frankfurter.dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

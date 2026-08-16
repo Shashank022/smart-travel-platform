@@ -1,0 +1,17 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: trip-planner-service
+services:
+  location:
+    base-url: http://localhost:8082
+  weather:
+    base-url: http://localhost:8083
+  currency:
+    base-url: http://localhost:8084
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

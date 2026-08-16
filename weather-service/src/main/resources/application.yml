@@ -1,0 +1,13 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: weather-service
+clients:
+  open-meteo-weather:
+    base-url: https://api.open-meteo.com
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

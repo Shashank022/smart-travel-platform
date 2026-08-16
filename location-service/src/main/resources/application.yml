@@ -1,0 +1,13 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: location-service
+clients:
+  open-meteo-geocoding:
+    base-url: https://geocoding-api.open-meteo.com
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

@@ -1,13 +1,42 @@
 server:
   port: 8083
+
 spring:
   application:
     name: weather-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 2s
+      timeout: 2s
+
 clients:
   open-meteo-weather:
     base-url: https://api.open-meteo.com
+
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      weatherApi:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  retry:
+    instances:
+      weatherApi:
+        maxAttempts: 3
+        waitDuration: 500ms
+

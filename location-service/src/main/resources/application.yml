@@ -3,6 +3,14 @@ server:
 spring:
   application:
     name: location-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 2s
+      timeout: 2s
+
 clients:
   open-meteo-geocoding:
     base-url: https://geocoding-api.open-meteo.com
@@ -10,4 +18,24 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,circuitbreakers,circuitbreakerevents,retries,retryevents
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      locationApi:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        eventConsumerBufferSize: 20
+
+  retry:
+    instances:
+      locationApi:
+        maxAttempts: 3
+        waitDuration: 500ms
+        eventConsumerBufferSize: 20

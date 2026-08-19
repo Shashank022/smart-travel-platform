@@ -1,11 +1,21 @@
 server:
   port: 8084
+
 spring:
   application:
     name: currency-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 2s
+      timeout: 2s
+
 clients:
   frankfurter:
     base-url: https://api.frankfurter.dev
+
 management:
   endpoints:
     web:

@@ -1,0 +1,97 @@
+services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: smart-travel-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  location-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: location-service
+    container_name: location-service
+    ports:
+      - "8082:8082"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  weather-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: weather-service
+    container_name: weather-service
+    ports:
+      - "8083:8083"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  currency-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: currency-service
+    container_name: currency-service
+    ports:
+      - "8084:8084"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+
+  trip-planner-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: trip-planner-service
+    container_name: trip-planner-service
+    ports:
+      - "8081:8081"
+    environment:
+      LOCATION_SERVICE_URL: http://location-service:8082
+      WEATHER_SERVICE_URL: http://weather-service:8083
+      CURRENCY_SERVICE_URL: http://currency-service:8084
+    depends_on:
+      - location-service
+      - weather-service
+      - currency-service
+
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      TRIP_PLANNER_URL: http://trip-planner-service:8081
+      LOCATION_SERVICE_URL: http://location-service:8082
+      WEATHER_SERVICE_URL: http://weather-service:8083
+      CURRENCY_SERVICE_URL: http://currency-service:8084
+    depends_on:
+      - trip-planner-service

@@ -9,20 +9,21 @@ spring:
       server:
         webflux:
           routes:
+
             - id: trip-planner-service
-              uri: http://localhost:8081
+              uri: ${TRIP_PLANNER_URL:http://localhost:8081}
               predicates:
                 - Path=/api/v1/travel/**
             - id: location-service
-              uri: http://localhost:8082
+              uri: ${LOCATION_SERVICE_URL:http://localhost:8082}
               predicates:
                 - Path=/api/v1/locations/**
             - id: weather-service
-              uri: http://localhost:8083
+              uri: ${WEATHER_SERVICE_URL:http://localhost:8083}
               predicates:
                 - Path=/api/v1/weather/**
             - id: currency-service
-              uri: http://localhost:8084
+              uri: ${CURRENCY_SERVICE_URL:http://localhost:8084}
               predicates:
                 - Path=/api/v1/currency/**
 

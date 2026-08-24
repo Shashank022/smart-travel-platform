@@ -11,6 +11,23 @@ services:
       timeout: 3s
       retries: 10
 
+  postgres:
+    image: postgres:16-alpine
+    container_name: smart-travel-postgres
+    environment:
+      POSTGRES_DB: smarttravel
+      POSTGRES_USER: smarttravel
+      POSTGRES_PASSWORD: smarttravel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smarttravel -d smarttravel"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   location-service:
     build:
       context: .
@@ -95,3 +112,6 @@ services:
       CURRENCY_SERVICE_URL: http://currency-service:8084
     depends_on:
       - trip-planner-service
+
+volumes:
+  postgres-data:

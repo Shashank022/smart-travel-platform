@@ -26,6 +26,10 @@ spring:
               uri: ${CURRENCY_SERVICE_URL:http://localhost:8084}
               predicates:
                 - Path=/api/v1/currency/**
+            - id: saved-trips
+              uri: ${TRIP_PLANNER_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/trips/**
 
 management:
   endpoints:

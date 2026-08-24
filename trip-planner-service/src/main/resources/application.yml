@@ -1,8 +1,20 @@
 server:
   port: 8081
+
 spring:
   application:
     name: trip-planner-service
+
+  r2dbc:
+    url: ${R2DBC_URL:r2dbc:postgresql://localhost:5432/smarttravel}
+    username: ${DB_USERNAME:smarttravel}
+    password: ${DB_PASSWORD:smarttravel}
+
+  flyway:
+    url: ${FLYWAY_URL:jdbc:postgresql://localhost:5432/smarttravel}
+    user: ${DB_USERNAME:smarttravel}
+    password: ${DB_PASSWORD:smarttravel}
+    locations: classpath:db/migration
 services:
   location:
     base-url: ${LOCATION_SERVICE_URL:http://localhost:8082}

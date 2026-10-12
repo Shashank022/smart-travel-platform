@@ -56,6 +56,7 @@ services:
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      SMART_TRAVEL_RESILIENCE_TEST_ENABLED: ${SMART_TRAVEL_RESILIENCE_TEST_ENABLED:-false}
     depends_on:
       redis:
         condition: service_healthy

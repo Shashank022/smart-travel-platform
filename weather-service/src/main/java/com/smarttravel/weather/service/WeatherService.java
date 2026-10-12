@@ -127,6 +127,18 @@ public class WeatherService {
                 );
     }
 
+    /**
+     * Produces a deterministic provider failure through the production retry
+     * and circuit-breaker instances. This is used only by the opt-in local
+     * resilience test endpoint and never calls Open-Meteo or Redis.
+     */
+    public Mono<WeatherResponse> simulateProviderFailure() {
+        return Mono.defer(() -> Mono.<WeatherResponse>error(
+                        new IllegalStateException("Simulated weather provider failure")))
+                .transformDeferred(RetryOperator.of(weatherRetry))
+                .transformDeferred(CircuitBreakerOperator.of(weatherCircuitBreaker));
+    }
+
     private Mono<WeatherResponse> fetchFromOpenMeteo(
             double latitude,
             double longitude) {

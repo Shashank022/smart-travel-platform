@@ -62,6 +62,27 @@ The startup script waits for Redis and PostgreSQL before launching the services.
 
 If Redis is unavailable, the services continue by calling their upstream APIs and skip cache writes.
 
+## Circuit-breaker load test
+
+Weather calls already use Resilience4j Retry and CircuitBreaker. The breaker opens when the weather provider has a high failure rate; request volume by itself does not open it. This opt-in endpoint generates predictable failures through the same retry and breaker instances without contacting Open-Meteo.
+
+Start only Redis and the weather service with the local test endpoint enabled:
+
+```bash
+SMART_TRAVEL_RESILIENCE_TEST_ENABLED=true docker compose up --build redis weather-service
+```
+
+In TextPilot Studio, open Performance Lab and configure a **POST** request to `http://localhost:8083/api/v1/test/resilience/weather-failure`. Choose the **Burst** preset, set 100 requests and concurrency 10, then start the run. The endpoint intentionally returns HTTP 500; after enough failed calls, later requests are rejected by the open breaker.
+
+Check the breaker state and events:
+
+```bash
+curl http://localhost:8083/actuator/circuitbreakers
+curl http://localhost:8083/actuator/circuitbreakerevents
+```
+
+The endpoint is disabled by default. To reset the in-memory breaker for another run, restart the weather service with `docker compose restart weather-service`.
+
 ## Tech stack
 
 Java 21, Spring Boot 4, Spring Cloud Gateway, Spring WebFlux, Redis, PostgreSQL, R2DBC, Flyway, and Resilience4j.

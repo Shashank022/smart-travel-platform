@@ -40,3 +40,6 @@ resilience4j:
         maxAttempts: 3
         waitDuration: 500ms
 
+smarttravel:
+  resilience-test:
+    enabled: ${SMART_TRAVEL_RESILIENCE_TEST_ENABLED:false}

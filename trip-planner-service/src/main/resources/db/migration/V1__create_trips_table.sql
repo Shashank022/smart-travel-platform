@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS trips (
+    id BIGSERIAL PRIMARY KEY,
+    city VARCHAR(255) NOT NULL,
+    country VARCHAR(255),
+    country_code VARCHAR(8),
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    timezone VARCHAR(100),
+    from_currency VARCHAR(3) NOT NULL,
+    to_currency VARCHAR(3) NOT NULL,
+    exchange_rate NUMERIC(20, 10),
+    budget NUMERIC(19, 2),
+    converted_budget NUMERIC(19, 2),
+    temperature_c DOUBLE PRECISION,
+    apparent_temperature_c DOUBLE PRECISION,
+    wind_speed_kmh DOUBLE PRECISION,
+    weather_code INTEGER,
+    weather_condition VARCHAR(64),
+    generated_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL
+);
